@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0064)http://web.cs.ucla.edu/classes/spring23/cs32/Projects/3/faq.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+ <title>CS 32 Project 3 FAQ, Spring 2023</title>
+</head>
+<body>
+<div align="right">
+Spring 2023 CS 32
+</div>
+<div align="center">
+<h2>Project 3 FAQ</h2>
+</div>
+<ol>
+<li>
+<p>
+<strong>How can I limit <code>SmartPlayer::chooseMove</code> to 5
+seconds?</strong>
+</p><p>
+Here is an example of a Timer class you can use.
+</p><p>
+Suppose we're doing some recursive computation.  Let's say each non-base case
+needs to solve 10 subproblems, and let's say our tree of recursive calls is
+10 levels deep.  For this example, what we want to compute is simple:  Count
+how many function calls in total we make.  We'll also see how long that takes.
+The function is named f and takes one integer argument, which will be reduced
+by 1 each level down the recursive call tree, with the argument 0 being the
+base case.  In preparation for enhancements we'll get to later, f calls a
+recursive function f_helper to do the real work.
+</p>
+<pre>//========================================================================
+// Timer t;                 // create and start a timer
+// t.start();               // restart the timer
+// double d = t.elapsed();  // milliseconds since timer was last started
+//========================================================================
+
+#include &lt;chrono&gt;
+
+class Timer
+{
+  public:
+    Timer()
+    {
+        start();
+    }
+    void start()
+    {
+        m_time = std::chrono::high_resolution_clock::now();
+    }
+    double elapsed() const
+    {   
+        std::chrono::duration&lt;double, std::milli&gt; diff =
+                          std::chrono::high_resolution_clock::now() - m_time;
+        return diff.count();
+    }
+  private:
+    std::chrono::high_resolution_clock::time_point m_time;
+};
+
+//========================================================================
+
+#include &lt;iostream&gt;
+using namespace std;
+
+unsigned long f_helper(int n);
+unsigned long f(int n);
+
+int main()
+{
+	unsigned long result = f(10);
+	cout &lt;&lt; result / 1000000.0  &lt;&lt; " million calls" &lt;&lt; endl;
+}
+
+unsigned long f(int n)
+{
+	Timer timer;
+	unsigned long result = f_helper(n);
+	cout &lt;&lt; timer.elapsed() &lt;&lt; " ms" &lt;&lt; endl;
+	return result;
+}
+
+unsigned long f_helper(int n)
+{
+	unsigned long callCount = 1;
+	if (n == 0)
+		callCount += 0;  /// do a base case computation
+	else
+	{
+		for (int branchesLeftToExplore = 10; branchesLeftToExplore &gt; 0; branchesLeftToExplore--)
+		{
+			  // Explore this branch
+			callCount += f_helper(n-1);
+		}
+	}
+	return callCount;
+}
+</pre>
+<p>
+If we build this using g32fast on the SEASEnet Linux server and run it, we
+get this output (although the time may be a little different between one run
+and another):
+</p>
+<pre>21871.5 ms
+11111.1 million calls
+</pre>
+<p>
+If we want to limit execution to as much as we can get done in 5 seconds,
+we can give the recursive function a time limit that it can check against.
+If it sees that it's about to run out of time, then instead of doing
+more recursive calls, it can use some quick non-recursive way of coming
+up with an answer to return.  For a game, it might be an evaluation of the
+current board state (without any further recursive lookahead).  For our
+example, we'll just add 0 to the callCount.  The functions f and f_helper
+now look like this:
+</p>
+<pre>unsigned long f(int n)
+{
+    double timeLimit = 4990;  // 4.99 seconds; allow 10 ms for wrapping up
+    Timer timer;
+    unsigned long result = f_helper(n, timeLimit, timer);
+    cout &lt;&lt; timer.elapsed() &lt;&lt; " ms" &lt;&lt; endl;
+    return result;
+}
+
+unsigned long f_helper(int n, double timeLimit, Timer&amp; timer)
+{
+    unsigned long callCount = 1;
+    if (n == 0)
+        callCount += 0;  /// do a base case computation
+    else if (timeLimit &lt;= 0)
+        callCount += 0;  //  do non-recursive heuristic computation
+    else
+    {
+        for (int branchesLeftToExplore = 10; branchesLeftToExplore &gt; 0; branchesLeftToExplore--)
+        {
+              // Save start time so can compute time this branch takes
+            double startTime = timer.elapsed();
+              // Explore this branch
+            callCount += f_helper(n-1, timeLimit, timer);
+              // Adjust remaining time
+            timeLimit -= (timer.elapsed() - startTime);
+            if (timeLimit &lt;= 0)
+                timeLimit = 0;
+        }
+    }
+    return callCount;
+}
+</pre>
+<p>
+Now the output is this:
+</p>
+<pre>4990.01 ms
+60.7923 million calls
+</pre>
+<p>
+Even though the program ran in a litle less than a quarter of the time of
+the original program, it didn't make anywhere near a quarter of the
+recursive calls.  That's because the calls to the <code>Timer::elapsed</code>
+function itself can about 50 to 600 nanoseconds, depending on your computer.
+If there are many calls to that function, you may not want to call it so
+often.  Here's one way:  To call <code>Timer::elapsed</code> one-thousandth
+as frequently, we introduce a JumpyTimer, which calls
+<code>Timer::elapsed</code> only one out of every 1000 times we call
+<code>JumpyTimer::elapsed</code>; the other 999 times, it simply returns the
+same value it returned before, a quick operation.  We add this JumpyTimer
+class after the Timer class definition:
+</p>
+<pre>  // Advance jumpy timer only after jumpInterval calls to elapsed
+class JumpyTimer
+{
+  public:
+	JumpyTimer(int jumpInterval)
+	 : m_jumpInterval(jumpInterval), m_callsMade(0)
+	{
+		actualElapsed();
+	}
+	double elapsed()
+	{
+		m_callsMade++;
+		if (m_callsMade == m_jumpInterval)
+		{
+			m_lastElapsed = m_timer.elapsed();
+			m_callsMade = 0;
+		}
+		return m_lastElapsed;
+	}
+	double actualElapsed()
+	{
+		m_lastElapsed = m_timer.elapsed();
+		return m_lastElapsed;
+	}
+  private:
+	Timer m_timer;
+	int m_jumpInterval;
+	int m_callsMade;
+	int m_lastElapsed;
+};
+</pre>
+<p>
+and we chaage f and f_helper to use a jumpy timer:
+</p>
+<pre>unsigned long f(int n)
+{
+	double timeLimit = 4990;  // 4.99 seconds; allow 10 ms for wrapping up
+	JumpyTimer timer(1000);
+	unsigned long result = f_helper(n, timeLimit, timer);
+	cout &lt;&lt; timer.actualElapsed() &lt;&lt; " ms" &lt;&lt; endl;
+	return result;
+}
+
+unsigned long f_helper(int n, double timeLimit, JumpyTimer&amp; timer)
+{
+	...
+}
+</pre>
+<p>
+Now the output is this:
+</p>
+<pre>4990 ms
+923.073 million calls
+</pre>
+<p>
+That's quite a bit better, but both versions have the characteristic that
+they are depth-first searches:  For the ten branches looped over in the top
+level call to f_helper, the first branch is completely explored before the
+second branch, etc., so if time runs out while exploring the first branch,
+the other nine branches are skipped over quickly.  This is terrible for a
+game tree, since if there's a win possible in, say, three moves down one of
+the later top-level branches, it would not be found.
+</p><p>
+One way to ameliorate this is to split the time limit among the branches so
+that exploring the first branch is limited to one-tenth of the time limit.
+If it runs out of time, there's still time for the other branches.  Also,
+if the first branch exploration finished with time left to spare, its unused
+time can be allotted as additional time for the other branches.  This can be
+done with a small change to the for loop in f_helper:
+</p>
+<pre>        for (int branchesLeftToExplore = 10; branchesLeftToExplore &gt; 0; branchesLeftToExplore--)
+        {
+              // Allocate remaining time limit equally among remaining braches to explore
+            double thisBranchTimeLimit = timeLimit / branchesLeftToExplore;
+
+              // Save branch start time so can compute the time the branch took
+            double startTime = timer.elapsed();
+              // Explore this branch
+            callCount += f_helper(n-1, thisBranchTimeLimit, timer);
+              // Adjust remaining time
+            timeLimit -= (timer.elapsed() - startTime);
+            if (timeLimit &lt;= 0)
+                timeLimit = 0;
+        }
+</pre>
+<p>
+with output
+</p>
+<pre>4990 ms
+920.853 million calls
+</pre>
+<p>
+Not surprisingly, a similar number of function calls were made in the 5
+seconds explored, but if we were to examine the pattern of how they were
+called, we'd see a more even distribution of time spent in each branch.
+</p>
+</li>
+</ol>
+
+
+</body></html>

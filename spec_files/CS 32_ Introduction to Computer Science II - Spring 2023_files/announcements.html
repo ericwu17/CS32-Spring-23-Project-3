@@ -1,0 +1,1038 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0065)http://web.cs.ucla.edu/classes/spring23/cs32/Projects/3/spec.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+ <title>CS 32 Project 3, Spring 2023</title>
+</head>
+<body>
+<div align="right">
+Spring 2023 CS 32
+</div>
+<div align="center">
+<h2>Programming Assignment 3<br>
+Kalah</h2>
+<p>
+<strong>Time due: 11:00 PM Tuesday, May 30</strong>
+</p>
+</div>
+<p>
+Kalah is one of a family of African and Asian games that have been played
+since ancient times.  For this project, you are to write a program that plays
+the game of Kalah well.  The game has many variants, so we'll first describe
+the one we'll use for this project.
+</p><p>
+Kalah is played on a board that looks like this:
+</p>
+<div align="center">
+<table style="text-align: center;">
+<tbody><tr><td colspan="2">&nbsp;</td><td colspan="11" align="center">North</td><td colspan="2">&nbsp;</td></tr>
+<tr><td colspan="2">&nbsp;</td><td>1</td><td>&nbsp;</td><td>2</td><td>&nbsp;</td><td>3</td><td>&nbsp;</td><td>4</td><td>&nbsp;</td><td>5</td><td>&nbsp;</td><td>6</td><td colspan="2">&nbsp;</td></tr>
+<tr>
+   <td colspan="2">&nbsp;</td>
+   <td><table style="border: thin solid;">
+      <tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+   </tbody></table></td>
+   <td>&nbsp;</td>
+   <td><table style="border: thin solid;">
+      <tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+   </tbody></table></td>
+   <td>&nbsp;</td>
+   <td><table style="border: thin solid;">
+      <tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+   </tbody></table></td>
+   <td>&nbsp;</td>
+   <td><table style="border: thin solid;">
+      <tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+   </tbody></table></td>
+   <td>&nbsp;</td>
+   <td><table style="border: thin solid;">
+      <tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+   </tbody></table></td>
+   <td>&nbsp;</td>
+   <td><table style="border: thin solid;">
+      <tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+   </tbody></table></td>
+   <td colspan="2">&nbsp;</td>
+</tr>
+<tr><td>North's pot</td><td>
+	<table style="border: thin solid;"><tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr></tbody></table>
+</td><td colspan="11">&nbsp;</td><td>
+	<table style="border: thin solid;"><tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr></tbody></table>
+</td><td>South's pot</td></tr>
+<tr>
+   <td colspan="2">&nbsp;</td>
+   <td><table style="border: thin solid;">
+      <tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+   </tbody></table></td>
+   <td>&nbsp;</td>
+   <td><table style="border: thin solid;">
+      <tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+   </tbody></table></td>
+   <td>&nbsp;</td>
+   <td><table style="border: thin solid;">
+      <tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+   </tbody></table></td>
+   <td>&nbsp;</td>
+   <td><table style="border: thin solid;">
+      <tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+   </tbody></table></td>
+   <td>&nbsp;</td>
+   <td><table style="border: thin solid;">
+      <tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+   </tbody></table></td>
+   <td>&nbsp;</td>
+   <td><table style="border: thin solid;">
+      <tbody><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+   </tbody></table></td>
+   <td colspan="2">&nbsp;</td>
+</tr>
+<tr><td colspan="2">&nbsp;</td><td>1</td><td>&nbsp;</td><td>2</td><td>&nbsp;</td><td>3</td><td>&nbsp;</td><td>4</td><td>&nbsp;</td><td>5</td><td>&nbsp;</td><td>6</td><td colspan="2">&nbsp;</td></tr>
+<tr><td colspan="2">&nbsp;</td><td colspan="11" align="center">South</td><td colspan="2">&nbsp;</td></tr>
+</tbody></table>
+</div>
+<p>
+Each of the two players, North and South, has six holes on their side of the
+board and their own pot (their "kalah").  Each hole start off with four beans
+in it.  Players take turns making moves.  A move begins with a player picking
+up all of the beans in one of their six holes.  Then, proceeding
+counterclockwise, the player puts one bean in each hole and their own pot
+(skipping over their opponent's pot if the "sowing" gets that far), until all
+of the beans that were picked up have been sown.  For example, if South had 4
+beans in her #5 hole, she might pick them up and deposit one each in her #6
+hole, her pot, and North's #6 and #5 hole.  Depending on where the last bean
+ends up, one of three things happens: 
+</p>
+<ul>
+<li><p>
+If the last bean was placed in the player's pot, the player must take another
+turn.  
+</p></li><li><p>
+If the last bean was placed in one of the player's own holes that was empty
+just a moment before, and if the opponent's hole directly opposite from that
+hole is not empty, then that last bean and all beans in the opponent's hole
+directly opposite from that hole are put into the player's pot, and the turn
+ends.  (This is a <em>capture</em>.)  Notice that it is not a capture if the
+player's last bean ends up in what was an empty hole on the opponent's side.
+</p></li><li><p>
+In all other cases, the turn ends.
+</p></li>
+</ul>
+<p>
+Whenever the player whose turn it is can not make a move (because their side
+is empty), any beans remaining in their opponent's holes are put into that
+opponent's pot and the game is over.  The winner is the player whose pot has
+the most beans.
+</p><p>
+As an example of the rules, consider the following endgame; it's South's turn:
+</p>
+<pre>                      North
+                 1  2  3  4  5  6
+                 ----------------
+                 2  4  0  0  0  0
+North's pot  22                    16  South's pot
+                 0  0  1  1  1  1
+                 ----------------
+                 1  2  3  4  5  6
+                      South
+</pre>
+<p>
+Suppose South moves from her hole #6:
+</p>
+<pre>                 2  4  0  0  0  0
+             22                    17             
+                 0  0  1  1  1  0
+</pre>
+<p>
+Since that ended up in her pot, she goes again, choosing, say, hole #4:
+</p>
+<pre>                 2  4  0  0  0  0
+             22                    17             
+                 0  0  1  0  2  0
+</pre>
+<p>
+Suppose North now chooses his hole #1:
+</p>
+<pre>                 0  4  0  0  0  0
+             23                    17             
+                 1  0  1  0  2  0
+</pre>
+<p>
+If South now chooses her hole #1, she captures the beans in North's hole #2:
+</p>
+<pre>                 0  0  0  0  0  0
+             23                    22
+                 0  0  1  0  2  0
+</pre>
+<p>
+It is now North's turn, but North can not make a move, so the game is over,
+and the 3 beans still in South's holes go into South's pot:
+</p>
+<pre>                 0  0  0  0  0  0
+             23                    25
+                 0  0  0  0  0  0
+</pre>
+<p>
+South has 25 beans to North's 23, so South wins.
+</p><p>
+Your program will be designed to allow two players to play against each other.
+Each player will be either a human or a computer player.  The computer player's
+behavior will be embodied in a C++ class described later.  You will write
+different classes for different kinds of computer players.  For example, one
+kind of computer player may be really dumb and just pick an arbitrary one
+of its holes for its turns.  Another may play by considering moves and
+countermoves, selecting the move it determines is best.  Let's see how it
+might do that.
+</p>
+<h3>How to play intelligently</h3>
+<p>
+<em>
+Until you are ready to implement the SmartPlayer::chooseMove function described
+later, you can get by with just skimming this section and continue reading
+at the </em>Your assignment <em>section.
+</em>
+</p>
+<p>
+Game playing is one area in the field of computer science called artificial
+intelligence (making computers do tasks which appear to require human
+reasoning ability).  What you want your program to do is somehow model what
+a human does when he or she plays:  Consider the possible moves (and the
+opponent's countermoves, and the replies to those countermoves, etc.) and
+select one that is in some way best.
+</p><p>
+To accomplish this, a program needs to be able to do three things:
+</p>
+<ul>
+<li><p>
+Determine what all the legal moves are from a given board configuration,
+including determining whether the game is finished.
+</p></li><li><p>
+Decide just how "good" a particular board configuration is for a player.
+</p></li><li><p>
+Organize the previous two tasks so that possible good moves are not overlooked
+and time is not wasted considering many useless moves.
+</p></li>
+</ul>
+<p>
+Because the rules of Kalah are simple, the first task (determining legal moves)
+should be easy to program.  We will hold off discussing the second task until
+we talk about the third.  For the third task, we will use a <em>game tree</em>
+to organize in our minds (and implicitly or explicitly in your program) the
+task of considering sequences of moves.
+</p>
+<h4>Game trees</h4>
+<p>
+We can represent the possible positions that can develop from a given one
+by drawing a tree (rather like the macOS or Windows tree of folders for
+files).  At the top (the <em>root</em> of the tree, we show the given
+position.  Beneath it, we draw the positions resulting from all of the
+possible moves that the player whose turn it is can make.  Below each of
+those positions, we draw the positions resulting from each possible
+opponent countermove to the move that resulted in that position.  We can
+continue this as long as we want, subject to time and space limitations. 
+For example, from the position
+</p>
+<pre>                      North
+                 0  1  0  0  2  0
+             22                    20
+                 0  0  2  0  1  0
+                      South
+</pre>
+<p>
+with South to move next, we can derive this (partial) game tree:
+</p>
+<div align="center">
+<img src="./gametree.jpg" width="696" height="453" alt="Game Tree">
+</div>
+<p>
+Notice that the nodes one level down from the root reflect the results of
+South's possible moves.  Two levels down are the results of North's
+countermoves.  Three levels down are South's replies to those countermoves.
+(Boredom kept us from drawing further levels of the tree.)
+</p><p>
+(Notice, by the way, what South did in position P11 to result in P112:  First,
+sow the two beans from hole #5, ending in the pot and getting another turn.
+Then, sow from hole #4, capturing the beans in North's hole #5.  To get from
+P11 to P113, first sow from hole #5, then #6, then #4, which resulted in a
+capture, ending South's turn.  To get from P113 to P1131, North sows from hole
+#1 and gets another turn, which North can't take because there are no more
+beans on North's side, so the game is over.)
+</p><p>
+Given the <em>complete</em> game tree with a given position at the root,
+a player can decide the best move to make by finding all the paths through the
+tree that lead to a winning position and choosing a move, if any, that is
+on a winning path that the opponent cannot force the player from without
+putting the player on another winning path.  Unfortunately, the complete game
+tree developed from a position is usually too large to traverse in a
+reasonable amount of time.  Instead, we limit ourselves to "looking ahead"
+only a few moves (i.e., examining only a few levels of the game tree).  Since
+there may not be a winner after only a few moves, we need other criteria to
+decide how good a position is.
+</p><h4>Evaluation functions</h4>
+<p>
+We will return to game trees after we discuss the second task mentioned 
+above: an <em>evaluation function</em> that, given a position, returns a
+number that measures how good that position is for the player.
+</p><p>
+A human evaluates a position by applying various rules of thumb to it.  For
+example, "The more beans I have in my pot, the better" is a simple rule of
+thumb for Kalah, but "The greater the difference between the number of beans
+in my pot and the number in my opponent's, the better" is probably a better
+one.  These rules of thumb are called <em>heuristics</em>.  Our evaluation
+functions should reflect the heuristics we believe are good, perhaps giving
+more weight to some more than others.
+</p><p>
+For many two-player games, Kalah among them, the same evaluation function that
+measures how good a position is for one player also measures how bad that
+position is for the other.  If the function gives high numbers to positions
+that are good for South, then South will try to get into positions that
+evaluate to high numbers, while North will try to move into positions rated low
+by the same function (since bad for South is good for North).
+</p>
+<h4>The minimax algorithm</h4>
+<p>
+The minimax algorithm is a way for your program to search the game tree so that
+it finds what it considers to be the best play available.  Minimax works on
+the assumption that each player will make the best move available to that
+player at the time, where "best" is measured using the evaluation function. 
+A player can never be hurt by an opponent playing less than optimally.
+</p><p>
+To decide on a move from a given position, we generate a game tree for that
+position, cutting it off at some point.  We then apply the evaluation function
+to each leaf of the tree (i.e., each node from which we did not generate any
+further nodes).  As an example, let's use the tree shown above, assuming that
+we cut off the tree generation at the nodes shown.  For our evaluation
+function, we'll use "the number of beans in South's pot minus the number of
+beans in North's pot", except that a winning position for South is valued at
++&#8734; (or a very large number), and a loss for South is &#8722;&#8734;,
+since winning and losing are the best and worst things that can happen.  Then
+the values of the positions in the tree are as follows (we'll explain how we
+arrived at the numbers in the non-leaf nodes):
+</p>
+<pre>South to move:                         P0: 0
+                                     /        \
+                                   /            \
+                                 /                \
+North to move:               P1: 0                 P2: -&#8734;
+                            /     \                  /    \
+                           /        \               /      \
+                          /           \            /        \
+South to move:      P11: +&#8734;           P12: 0     -2         -&#8734;
+                    /  | \            /  | \     P21        P22
+                   /   |  \          /   |  \
+North to move:  -2     2   +&#8734;      -2   -1   0
+               P111  P112  P113   P121 P122 P123
+</pre>
+<p>
+(Notice that P113 is valued at +&#8734;, since South's having a majority of
+the beans means makes it impossible for South to lose.  Similarly, P22 is
+valued at &#8722;&#8734;, since North's having a majority of the beans makes
+it impossible for South to win.)
+</p><p>
+Now, working from the leaves of the tree toward the root, we fill in the
+values for the non-leaf nodes according to these rules:
+</p>
+<ul>
+<li><p>
+If the transition from the non-leaf node under consideration to the next
+level down represents South's move, then assign to that node the
+<em>maximum</em> of the values from the lower level.  (This means that South
+will always make the move that leads to the best outcome for South, assuming
+perfect play by North; if North messes up, South can do no worse, and might
+possibly even do better.)  For example, node P12 was assigned the 0 from
+P123, since the -2 of P121 and the &#8722;1 of P122 would be worse for South.)
+</p></li><li><p>
+If the transition represents North's move, assign the <em>minimum</em> of the
+values from below.  (This means that North will always make the move that
+leads to the worst outcome for South.)  For example, P1 is 0 because P12
+won't lead to South's winning, and P11 will.
+</p></li>
+</ul>
+<p>
+Once we have a value for the root node, we make the move that corresponds to
+that value (in the example, the move that leads to P1).  If there is more than
+one move leading to that value, then any will do (although we might try to
+decide which one would give our opponent the greatest possibility of making
+an error.)
+</p><p>
+Here's high-level pseudocode for a function that determines a player's
+best move.  Its input parameters are the player whose move it is (i.e.
+South or North) and the board state to be considered; its output parameters
+are the best hole to sow from for the move and the value that can be achieved
+if that move is made.  If the game is over, the best hole
+is set to &#8722;1.  Also, since the entire game tree is too big to search
+completely, we'll have some criterion that causes the search not to
+explore the nodes below certain nodes; instead, we just evaluate that
+board position and set the best hole to &#8722;1.  The criterion could be
+based on how deep the search has gone, how much time has elapsed, and/or
+some other factors.
+</p>
+<pre>	void chooseMove(in: player, board; out: bestHole, value):
+		if no move for player exists (i.e., game is over),
+			bestHole = -1
+			value = value of this position (i.e., +&#8734;, -&#8734;, or 0)
+			return
+		if the criterion says we should not search below this node
+			bestHole = -1
+			value = value of this position
+			return
+		for every hole h the player can choose
+			"make" the move h
+			chooseMove(opponent, board, h2, v2)
+			"unmake" the move
+			if v2 is better for the player than best seen so far,
+				bestHole = h
+				value = v2
+		return
+</pre>
+<p>
+Again, this is high-level pseudocode, so you'll have to decide on
+implementation details.  For example, if the criterion is based on the depth
+of the search, you'll probably need another input parameter representing the
+search depth.  To "make" and "unmake" moves you're considering without moving
+for real, you may want to work with copies of the board.
+</p>
+<h3>Your assignment</h3>
+<p>
+For this project, you will write several classes that will work together to
+play Kalah.  So that we can effectively test your program, we will specify
+some classes you must have and public functions they must implement.  Because
+we (and you) will want to test how your program plays without playing a
+complete game every time, we will generalize the game so that you can play
+with fewer (or more) holes and beans.
+</p>
+<h4>enum Side</h4>
+<p>
+You must have this enumerated type and constants of that type declared this way:
+</p>
+<pre>	enum Side { NORTH, SOUTH };
+</pre>
+If used where an int is required, NORTH will automatically convert to 0, and
+SOUTH to 1.
+<h4>Constants</h4>
+<p>
+You must have these constants declared this way:
+</p>
+<pre>	const int NSIDES = 2;
+	const int POT = 0;
+</pre>
+<h4>class Board</h4>
+<p>
+The Board class is responsible for maintaining the board.  A Board object
+knows about the holes, pots, and beans.  For those functions that talk about
+specific holes, the holes are indicated by a Side and hole number.  The holes
+are numbered as indicated in the diagrams above; a pot is considered hole #0.
+Thus, North's hole #1 is next to North's pot; South's hole #6 is next to
+South's pot.  <strong>Notice that this numbering of holes is an aspect of
+the class's interface and our test code will depend on it.</strong>  Of
+course, your implementations of the functions are free to map that
+numbering scheme into something more convenient for their internal use.
+</p><p>
+The Board class must support these public member functions:
+</p>
+<dl>
+<dt><code>Board(int nHoles, int nInitialBeansPerHole);</code></dt>
+<dd>
+Construct a Board with the indicated number of holes per side (not counting the
+pot) and initial number of beans per hole.  If nHoles is not positive, act as
+if it were 1; if nInitialBeansPerHole is negative, act as if it were 0.
+</dd>
+<dt><code>int holes() const;</code></dt>
+<dd>
+Return the number of holes on a side (not counting the pot).
+</dd>
+<dt><code>int beans(Side s, int hole) const;</code></dt>
+<dd>
+Return the number of beans in the indicated hole or pot, or &#8722;1 if the hole
+number is invalid.
+</dd>
+<dt><code>int beansInPlay(Side s) const;</code></dt>
+<dd>
+Return the total number of beans in all the holes on the indicated side, not
+counting the beans in the pot.
+</dd>
+<dt><code>int totalBeans() const;</code></dt>
+<dd>
+Return the total number of beans in the game, including any in the pots.
+</dd>
+<dt><code>bool sow(Side s, int hole, Side&amp; endSide, int&amp; endHole);</code></dt>
+<dd>
+If the hole indicated by (s,hole) is empty or invalid or a pot, this
+function returns false without changing anything.  Otherwise, it will
+return true after sowing the beans:  the beans are removed from hole
+(s,hole) and sown counterclockwise, including s's pot if encountered, but
+skipping s's opponent's pot.  The function sets the parameters endSide and
+endHole to the side and hole where the last bean was placed.  (This function
+does <em>not</em> make captures or multiple turns; different Kalah variants
+have different rules about these issues, so dealing with them should not be
+the responsibility of the Board class.)
+</dd>
+<dt><code>bool moveToPot(Side s, int hole, Side potOwner);</code></dt>
+<dd>
+If the indicated hole is invalid or a pot, return false without changing
+anything.  Otherwise, move all the beans in hole (s,hole) into the pot
+belonging to potOwner and return true.
+</dd>
+<dt><code>bool setBeans(Side s, int hole, int beans);</code></dt>
+<dd>
+If the indicated hole is invalid or beans is negative, this function returns
+false without changing anything.  Otherwise, it will return true after setting
+the number of beans in the indicated hole or pot to the value of the third
+parameter.  (This could change what beansInPlay and totalBeans return if they
+are called later.)  This function exists solely so that we and you can more
+easily test your program:  None of your code that implements the member
+functions of any class is allowed to call this function directly or
+indirectly.  (We'll show an example of its use below.)
+</dd>
+</dl>
+<h4>class Player</h4>
+<p>
+Player is an abstract base class that defines a common interface that all kinds
+of players (human and various computer players) must implement.  It must
+support these public member functions:
+</p>
+<dl>
+<dt><code>Player(std::string name);</code></dt>
+<dd>
+Create a Player with the indicated name.
+</dd>
+<dt><code>std::string name() const;</code></dt>
+<dd>
+Return the name of the player.
+</dd>
+<dt><code>virtual bool isInteractive() const;</code></dt>
+<dd>
+Return false if the player is a computer player.  Return true if the player is
+human.  Most kinds of players will be computer players.
+</dd>
+<dt><code>virtual int chooseMove(const Board&amp; b, Side s) const = 0;</code></dt>
+<dd>
+Every concrete class derived from this class must implement this function so
+that if the player were to be playing side s and had to make a move given
+board b, the function returns the move the player would choose.  If
+no move is possible, return &#8722;1.
+</dd>
+<dt><code>virtual ~Player();</code></dt>
+<dd>
+Since this class is designed as a base class, it should have a virtual
+destructor.
+</dd>
+</dl>
+<p>
+Each concrete class derived from Player will implement the chooseMove function
+in its own way.  Of the classes listed here, only HumanPlayer::isInteractive
+should return true.  (When testing, we may supply other kinds of interactive
+players.)  Each of the three classes listed here must have a constructor
+taking a string representing the name of the player.
+</p>
+<h4>class HumanPlayer (derived from Player)</h4>
+<p>
+A HumanPlayer chooses its move by prompting a person running the program for
+a move (reprompting if necessary until the person enters a valid hole
+number), and returning that choice.  We will never test for a situation
+where the user doesn't enter an integer when prompted for a hole number. 
+(The techniques for dealing with the issue completely correctly are a
+distraction to this project, and involve either a function like
+<code>stoi</code> or <code>strtol</code>, or the type
+<code>istringstream</code>.)
+</p>
+<h4>class BadPlayer (derived from Player)</h4>
+<p>
+A BadPlayer is a computer player that chooses an arbitrary valid move and
+returns that choice.  "Arbitrary" can be what you like:  leftmost, nearest to
+pot, fewest beans, random, etc..  The point of this class is to have an
+easy-to-implement class that at least plays legally.
+</p>
+<h4>class SmartPlayer (derived from Player)</h4>
+<p>
+Here's your chance to shine.  A SmartPlayer chooses a valid move and returns
+it.  For any game played on a board of up to six holes per side, with up to
+four initial beans per hole, SmartPlayer::chooseMove must return its choice
+in no more than five seconds on the SEASnet Linux server
+<code>lnxsrv07.seas.ucla.edu</code> or
+<code>lnxsrv09.seas.ucla.edu</code>:
+<!-- **********
+<a href="faq.html">FAQ #1</a> gives you a way to tell when time is running out.
+********** --:>
+<!-- ********** -->
+(We'll give you a way of determining the time soon; until then, you can
+meet this requirement by limiting the depth of your game tree search or
+the number of game tree positions you explore to a limit you determine
+experimentally.)
+<!-- ********** -->
+SmartPlayer::chooseMove will be worth about 15-20% of the points for this
+project.
+</p>
+<h4>class Game</h4>
+<p>
+This class manages a game of a particular size by configuring the board and
+playing the game.  It must support these member functions:
+</p>
+<dl>
+<dt><code>Game(const Board&amp; b, Player* south, Player* north);</code></dt>
+<dd>
+Construct a Game to be played with the indicated players on a copy of the board
+b.  The player on the south side always moves first.
+</dd>
+<dt><code>void display() const;</code></dt>
+<dd>
+Display the game's board in a manner of your choosing, provided you show the
+names of the players and a reasonable representation of the state of the
+board.
+</dd>
+<dt><code>void status(bool&amp; over, bool&amp; hasWinner, Side&amp; winner) const;</code></dt>
+<dd>
+If the game is over (i.e., the move member function has been called and
+returned false), set over to true; otherwise, set over to false and do not
+change anything else.  If the game is over, set hasWinner to true if the game
+has a winner, or false if it resulted in a tie.  If hasWinner is set to
+false, leave winner unchanged; otherwise, set it to the winning side.  
+</dd>
+<dt><code>bool move(Side s);</code></dt>
+<dd>
+Attempt to make a complete move for the player playing side s.  "Complete"
+means that the player sows the seeds from a hole and takes any additional
+turns required or completes a capture.  Whenever the player gets an
+additional turn, you should display the board so someone looking at the
+screen can follow what's happening.  If the move can be completed, return
+true; if not, because the move is not yet completed but side s has no holes
+with beans to pick up and sow, sweep any beans in s's opponent's holes into
+that opponent's pot and return false.
+</dd>
+<dt><code>void play();</code></dt>
+<dd>
+Play the game.  Display the progress of the game in a manner of your choosing,
+provided that someone looking at the screen can follow what's happening.
+If neither player is interactive, then to keep the display from quickly
+scrolling through the whole game, it would be reasonable periodically to
+prompt the viewer to press ENTER to continue and not proceed until ENTER
+is pressed.  (The ignore function for input streams is useful here.) 
+Announce the winner at the end of the game.  You can apportion to your liking
+the responsibility for displaying the board between this function and the move
+function.<!--  (Note: If when this function is called, South has no beans in play,
+so can't make the first move, sweep any beans on the North side into North's
+pot and the game is thus over.)-->
+</dd>
+<dt><code>int beans(Side s, int hole) const;</code></dt>
+<dd>
+Return the number of beans in the indicated hole or pot of the game's board,
+or &#8722;1 if the hole number is invalid.  This function exists so that we and
+you can more easily test your program.
+</dd>
+</dl>
+<p>
+On the SEASnet Linux server, you can run the command
+<code>/usr/local/cs/bin/minikalah</code> to play the game built from this
+main routine.  You play as Marge: 
+</p>
+<pre>	int main()
+	{
+	    HumanPlayer hp("Marge");
+	    BadPlayer bp("Homer");
+	    Board b(3, 2);
+	    Game g(b, &amp;hp, &amp;bp);
+	    g.play();
+	}
+</pre>
+<p>
+If you run the command <code>/usr/local/cs/bin/robokalah</code>, you can watch
+two bad computer players play against each other:
+</p>
+<pre>	int main()
+	{
+	    BadPlayer bp1("Bart");
+	    BadPlayer bp2("Homer");
+	    Board b(3, 2);
+	    Game g(b, &amp;bp1, &amp;bp2);
+	    g.play();
+	}
+</pre>
+<p>
+Here are sample executables with those same main routines that run on a Mac:
+<a href="http://web.cs.ucla.edu/classes/spring23/cs32/Projects/3/minikalahmac.zip">minikalah</a> and
+<a href="http://web.cs.ucla.edu/classes/spring23/cs32/Projects/3/robokalahmac.zip">robokalah</a>.  On a Mac, if you click on the
+downloaded zip file and then double-click on the executable file
+(e.g., minikalahmac), your operating system may refuse to open it because it
+can't confirm who developed the program.  In that case, right-click on the
+executable instead, select Open With and then Terminal.app.  Select the gray
+Open button on the popup that again says it doesn't know the developer.) 
+There may be Windows version later.
+</p>
+<h3>Organizing your source files</h3>
+<p>
+So that we can test your program in ways that allow us to give you partial
+credit, there are oodles of requirements you must satisfy.  Most of them
+are simple matters of code organization designed to prevent certain
+annoying dependencies.
+</p>
+<p>
+Instead of having one class per file, for our ease of testing, you must
+organize your source code in the following manner:
+</p>
+<dl>
+<dt>Board.h</dt>
+<dd>Place your Board class definition here.</dd>
+<dt>Board.cpp</dt>
+<dd>Place your Board member function implementations here.</dd>
+<dt>Player.h</dt>
+<dd>Place your Player class definition here, as well as the definitions for
+the HumanPlayer, BadPlayer, and SmartPlayer classes.</dd>
+<dt>Player.cpp</dt>
+<dd>Place your Player member function implementations here, as well as
+those for HumanPlayer, BadPlayer, and SmartPlayer.</dd>
+<dt>Game.h</dt>
+<dd>Place your Game class definition here.</dd>
+<dt>Game.cpp</dt>
+<dd>Place your Game member function implementations here.</dd>
+<dt>Side.h</dt>
+<dd>This file must contain
+<pre>	enum Side { NORTH, SOUTH };
+
+	const int NSIDES = 2;
+	const int POT = 0;
+
+	inline
+	Side opponent(Side s)
+	{
+	    return Side(NSIDES - 1 - s);
+	}
+</pre>
+It may contain additional types, constants, and non-member function
+declarations that you find useful to add.
+</dd>
+<dt>Main.cpp</dt>
+<dd>This file contains your main routine and any implementations of any
+additional non-member functions that you find useful to add.
+</dd>
+</dl>
+<p>
+As always, header files must have appropriate include guards.  If you
+wish, you may implement member functions with simple implementations
+directly in the class definition instead of the corresponding .cpp file. 
+You must turn in all eight of these source files, even if some are empty
+(which could happen if you don't finish).
+</p><p>
+You must not add, remove, or change the declaration of any public member
+functions of the required classes (Board, Player and its subclasses,
+Game).  (Exception: if the compiler-generated bookkeeping functions
+(destructor, copy constructor, and assignment operator) don't do the right
+thing, declare and implement your own.)  You may add any <em>private</em>
+data members and <em>private</em> member functions you like to those
+classes.  You may add protected member functions to those classes if you
+wish, but you must not add any protected data members.  (We haven't talked
+about protected members in this course.)  The word <code>friend</code>
+must not appear in your program.
+</p><p></p><p>
+If you want to add publicly accessible functionality to a class, do it
+through non-member functions declared in Side.h and implemented in
+Main.cpp.  For example, given a board, both Game::move and
+SmartPlayer::chooseMove may want to take some similar actions on that
+board for a player.  You could have them both call a non-member function
+that takes a Board&amp; parameter and uses only the public interface of Board.
+</p><p>
+If we create a project consisting of the eight required files, it must build
+successfully.
+</p><p>
+If we create a project consisting of the eight required files, but replace
+your Board.h and Board.cpp with our correct implementations that behave as
+specified, the project must build successfully.  Notice that this implies
+that the rest of your project must not depend on anything being in those
+Board files except what we said must be there.  For example, if a Game member
+function depends on there being some additional non-member function relating
+to Boards, that function can't be in Board.h or Board.cpp.  (While
+stylistically it perhaps should be, for this project for our testing purposes
+you'll have to put such a function in Main.cpp and its declaration in
+Side.h.) 
+</p><p>
+The provisions of the preceding paragraph similarly apply if we replace
+your Player.h and Player.cpp with ours.  It also applies if we replace your
+Game.h and Game.cpp with ours.  (Our replacement implementations of Board,
+Player and its subclasses, and Game all have correct copy and assignment
+behavior.)
+</p><p>
+If we replace your Board files with ours as indicated above, or your
+Player files, or your Game files, your functions must still behave correctly.
+This implies that you can't, for example, have a global variable that a Board
+member function looks at under the assumption that a Game member function set
+it a certain way.  In other words, the only communication between your objects
+must be through the defined interfaces.
+</p><p>
+No member function of the required classes may cause anything to be written to
+cout except Game::display, Game::move, Game::play, and the chooseMove function
+of any class derived from Player for which isInteractive returns true.  If you
+want to print things out for debugging purposes, write to cerr instead of
+cout.  When we test your program, we will cause everything written to cerr
+to be discarded; we will never see that output, so you may leave those
+debugging output statements in your program if you wish.
+</p><p>
+No member function of the required classes may cause anything to be read from
+cin except Game::play and the chooseMove function of any class derived
+from Player for which isInteractive returns true.
+</p><p>
+As long as your program meets these requirements your main routine can do
+whatever you want, even nothing; whenever we run your program, we'll rename
+your main routine to something harmless and never call it.  We'll append
+to your Main.cpp a main routine of our own.
+</p><p>
+During execution, your program must not perform any undefined actions,
+such as dereferencing a null or uninitialized pointer.
+</p><p>
+If we rename your main routine to something harmless and append the following
+to your Main.cpp, your program must build successfully.  When the resulting
+executable is run, it must write <code>Passed all tests</code> and nothing
+more to cout and terminate normally.
+</p>
+<pre>	#include "Board.h"
+	#include "Side.h"
+	#include &lt;iostream&gt;
+	#include &lt;cassert&gt;
+	using namespace std;
+
+	void doBoardTests()
+	{
+	    Board b(3, 2);
+	    assert(b.holes() == 3  &amp;&amp;  b.totalBeans() == 12  &amp;&amp;
+                        b.beans(SOUTH, POT) == 0  &amp;&amp;  b.beansInPlay(SOUTH) == 6);
+	    b.setBeans(SOUTH, 1, 1);
+	    b.moveToPot(SOUTH, 2, SOUTH);
+	    assert(b.totalBeans() == 11  &amp;&amp;  b.beans(SOUTH, 1) == 1  &amp;&amp;
+	                b.beans(SOUTH, 2) == 0  &amp;&amp;  b.beans(SOUTH, POT) == 2  &amp;&amp;
+			b.beansInPlay(SOUTH) == 3);
+	    Side es;
+	    int eh;
+	    b.sow(SOUTH, 3, es, eh);
+	    assert(es == NORTH  &amp;&amp;  eh == 3  &amp;&amp;  b.beans(SOUTH, 3) == 0  &amp;&amp;
+	                b.beans(NORTH, 3) == 3  &amp;&amp;  b.beans(SOUTH, POT) == 3  &amp;&amp;
+			b.beansInPlay(SOUTH) == 1  &amp;&amp;  b.beansInPlay(NORTH) == 7);
+	}
+
+	int main()
+	{
+	    doBoardTests();
+	    cout &lt;&lt; "Passed all tests" &lt;&lt; endl;
+	}
+</pre>
+<p>
+If we rename your main routine to something harmless and append the following
+to your Main.cpp, your program must build successfully.  When the resulting
+executable is run, it must write two rows of equal signs and <code>Passed all
+tests</code>, and terminate normally.  Nothing more may be written to cout
+except that between the two rows of equal signs something will be written
+to get Marge's move.
+</p>
+<pre>	#include "Player.h"
+	#include "Board.h"
+	#include "Side.h"
+	#include &lt;iostream&gt;
+	#include &lt;cassert&gt;
+	using namespace std;
+
+	void doPlayerTests()
+	{
+	    HumanPlayer hp("Marge");
+	    assert(hp.name() == "Marge"  &amp;&amp;  hp.isInteractive());
+	    BadPlayer bp("Homer");
+	    assert(bp.name() == "Homer"  &amp;&amp;  !bp.isInteractive());
+	    SmartPlayer sp("Lisa");
+	    assert(sp.name() == "Lisa"  &amp;&amp;  !sp.isInteractive());
+	    Board b(3, 2);
+	    b.setBeans(SOUTH, 2, 0);
+	    cout &lt;&lt; "=========" &lt;&lt; endl;
+	    int n = hp.chooseMove(b, SOUTH);
+	    cout &lt;&lt; "=========" &lt;&lt; endl;
+	    assert(n == 1  ||  n == 3);
+	    n = bp.chooseMove(b, SOUTH);
+	    assert(n == 1  ||  n == 3);
+	    n = sp.chooseMove(b, SOUTH);
+	    assert(n == 1  ||  n == 3);
+	}
+
+	int main()
+	{
+	    doPlayerTests();
+	    cout &lt;&lt; "Passed all tests" &lt;&lt; endl;
+	}
+</pre>
+<p>
+If we rename your main routine to something harmless and append the following
+to your Main.cpp, your program must build successfully.  When the resulting
+executable is run, it must terminate normally.  The last line written to
+cout must be <code>Passed all tests</code>.
+</p>
+<pre>	#include "Game.h"
+	#include "Player.h"
+	#include "Board.h"
+	#include "Side.h"
+	#include &lt;iostream&gt;
+	#include &lt;cassert&gt;
+	using namespace std;
+
+	void doGameTests()
+	{
+	    BadPlayer bp1("Bart");
+	    BadPlayer bp2("Homer");
+	    Board b(3, 0);
+	    b.setBeans(SOUTH, 1, 2);
+	    b.setBeans(NORTH, 2, 1);
+	    b.setBeans(NORTH, 3, 2);
+	    Game g(b, &amp;bp1, &amp;bp2);
+	    bool over;
+	    bool hasWinner;
+	    Side winner;
+	      //    Homer
+	      //   0  1  2
+	      // 0         0
+	      //   2  0  0
+	      //    Bart
+	    g.status(over, hasWinner, winner);
+	    assert(!over &amp;&amp; g.beans(NORTH, POT) == 0 &amp;&amp; g.beans(SOUTH, POT) == 0 &amp;&amp;
+		g.beans(NORTH, 1) == 0 &amp;&amp; g.beans(NORTH, 2) == 1 &amp;&amp; g.beans(NORTH, 3) == 2 &amp;&amp;
+		g.beans(SOUTH, 1) == 2 &amp;&amp; g.beans(SOUTH, 2) == 0 &amp;&amp; g.beans(SOUTH, 3) == 0);
+
+	    g.move(SOUTH);
+	      //   0  1  0
+	      // 0         3
+	      //   0  1  0
+	    g.status(over, hasWinner, winner);
+	    assert(!over &amp;&amp; g.beans(NORTH, POT) == 0 &amp;&amp; g.beans(SOUTH, POT) == 3 &amp;&amp;
+		g.beans(NORTH, 1) == 0 &amp;&amp; g.beans(NORTH, 2) == 1 &amp;&amp; g.beans(NORTH, 3) == 0 &amp;&amp;
+		g.beans(SOUTH, 1) == 0 &amp;&amp; g.beans(SOUTH, 2) == 1 &amp;&amp; g.beans(SOUTH, 3) == 0);
+
+	    g.move(NORTH);
+	      //   1  0  0
+	      // 0         3
+	      //   0  1  0
+	    g.status(over, hasWinner, winner);
+	    assert(!over &amp;&amp; g.beans(NORTH, POT) == 0 &amp;&amp; g.beans(SOUTH, POT) == 3 &amp;&amp;
+		g.beans(NORTH, 1) == 1 &amp;&amp; g.beans(NORTH, 2) == 0 &amp;&amp; g.beans(NORTH, 3) == 0 &amp;&amp;
+		g.beans(SOUTH, 1) == 0 &amp;&amp; g.beans(SOUTH, 2) == 1 &amp;&amp; g.beans(SOUTH, 3) == 0);
+
+	    g.move(SOUTH);
+	      //   1  0  0
+	      // 0         3
+	      //   0  0  1
+	    g.status(over, hasWinner, winner);
+	    assert(!over &amp;&amp; g.beans(NORTH, POT) == 0 &amp;&amp; g.beans(SOUTH, POT) == 3 &amp;&amp;
+		g.beans(NORTH, 1) == 1 &amp;&amp; g.beans(NORTH, 2) == 0 &amp;&amp; g.beans(NORTH, 3) == 0 &amp;&amp;
+		g.beans(SOUTH, 1) == 0 &amp;&amp; g.beans(SOUTH, 2) == 0 &amp;&amp; g.beans(SOUTH, 3) == 1);
+
+	    g.move(NORTH);
+	      //   0  0  0
+	      // 1         4
+	      //   0  0  0
+	    g.status(over, hasWinner, winner);
+	    assert(over &amp;&amp; g.beans(NORTH, POT) == 1 &amp;&amp; g.beans(SOUTH, POT) == 4 &amp;&amp;
+		g.beans(NORTH, 1) == 0 &amp;&amp; g.beans(NORTH, 2) == 0 &amp;&amp; g.beans(NORTH, 3) == 0 &amp;&amp;
+		g.beans(SOUTH, 1) == 0 &amp;&amp; g.beans(SOUTH, 2) == 0 &amp;&amp; g.beans(SOUTH, 3) == 0);
+	    assert(hasWinner &amp;&amp; winner == SOUTH);
+	}
+
+	int main()
+	{
+	    doGameTests();
+	    cout &lt;&lt; "Passed all tests" &lt;&lt; endl;
+	}
+</pre>
+<h3>Turn it in</h3>
+<p>
+By Monday, May 29, there will be a link on the class webpage that
+will enable you to turn in your source files and report.  You will turn in
+a zip file containing these nine files:
+</p>
+<ul>
+<li>
+<p>
+Eight C++ files containing your program.  These are the files listed above.
+Comment any function you add to indicate what it does.  Comment any
+non-trivial code.
+</p>
+</li>
+<li>
+<p>
+A Word document named report.docx or report.doc, or a text file named
+report.txt, containing
+</p>
+<ul>
+<li>
+<p>
+a description of the design of your classes.  We know what the public
+interfaces are, but what about your implementations:  What are the major data
+structures that you use?  What private member functions or helper non-member
+functions did you define for what purpose?  
+</p>
+</li>
+<li>
+<p>
+a description of your design for SmartPlayer::chooseMove, including what
+heuristics you used to evaluate board positions.
+</p>
+</li>
+<li>
+<p>
+<a href="http://web.cs.ucla.edu/classes/spring23/cs32/pseudocode.html">pseudocode</a> for non-trivial algorithms.
+</p>
+</li>
+<li>
+<p>
+a note about any known bugs, serious inefficiencies, or notable problems you
+had.
+</p>
+</li>
+<li>
+<p>
+a list of the test cases that would thoroughly test the functions.  Be sure
+to indicate the purpose of the tests.  Even if you do not correctly
+implement all the functions, you can still list test cases that would test
+them.  Don't lose points by thinking "Well, I didn't implement this
+function, so I won't bother saying how I would have tested it if I
+<em>had</em> implemented it."
+</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Advice</h3>
+<p>
+Set up the eight files first, with stub implementations of the functions;
+for example, have functions returning an int be implemented as
+</p>
+<pre>	return -9999;  // TODO:  implement this function
+</pre>
+<p>
+Get this to build successfully.  Then implement the Board functionality and
+test it.  Implement and test Player/BadPlayer next, then HumanPlayer, then
+Game.  If you then make SmartPlayer choose a move the same way BadPlayer does,
+you have a working program that will be worth a majority of the correctness
+points.  (Ours at this stage is about 315 lines of code, counting only
+lines that have at least one non-punctuation character outside of a comment.)
+</p><p>
+After this works perfectly, try to earn the rest of the correctness points by
+making SmartPlayer choose its moves intelligently.  No matter how
+intelligently you try to make SmartPlayer play, it won't earn any of these
+points if it ever chooses an illegal move.
+</p><p>
+When you're sure SmartPlayer::chooseMove is correct, to test it for speed,
+build an optimized version of it.  On cs32.seas.ucla.edu, build the executable and run it this way:
+</p><p>
+</p><pre>	g32fast -o kalah Main.cpp Board.cpp Player.cpp Game.cpp
+	./kalah
+</pre>
+<p>
+(You don't have to know this, but this command omits some of the runtime
+error checking compiler options that our g32 command supplies, and it adds
+the -O2 compiler option that causes the compiler to spend more time
+optimizing the machine language translation of your code so that it will
+run faster when you execute it.)
+</p><p>
+Under Xcode, select Product / Scheme / Edit Scheme....  In the left panel,
+select Run, then in the right panel, select the Info tab.  In the Build
+Configuration dropdown, select Release.  For Visual C++, it's
+<a href="http://web.cs.ucla.edu/classes/spring23/cs32/Projects/3/vcreleasemode.html">a little trickier</a>.
+</p><p>
+Your program will run much faster in Release mode than Debug mode, but you
+won't be able to get much information from the debugger if you're trying
+to track down a bug.  (You can always switch back from Release to Debug
+mode if you like.)  When we test your program, we will build it in Release
+mode and/or build it with g32fast.
+</p>
+
+
+</body></html>
