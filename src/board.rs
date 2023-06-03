@@ -13,7 +13,7 @@ pub struct Board {
 }
 
 impl Board {
-    fn new(n_holes: i32, num_initial_beans_per_hole: i32) -> Self {
+    pub fn new(n_holes: i32, num_initial_beans_per_hole: i32) -> Self {
         let n_holes = if n_holes <= 0 { 1 } else { n_holes };
 
         Board {
@@ -25,10 +25,10 @@ impl Board {
         }
     }
 
-    fn holes(&self) -> i32 {
+    pub fn holes(&self) -> i32 {
         self.num_holes
     }
-    fn beans(&self, s: Side, hole: i32) -> i32 {
+    pub fn beans(&self, s: Side, hole: i32) -> i32 {
         if hole < 0 || hole > self.holes() {
             return -1;
         }
@@ -47,7 +47,7 @@ impl Board {
             }
         }
     }
-    fn beans_in_play(&self, s: Side) -> i32 {
+    pub fn beans_in_play(&self, s: Side) -> i32 {
         let v = match s {
             Side::North => self.north_holes.iter(),
             Side::South => self.south_holes.iter(),
@@ -59,7 +59,7 @@ impl Board {
         }
         acc
     }
-    fn total_beans(&self) -> i32 {
+    pub fn total_beans(&self) -> i32 {
         let mut acc = 0;
         for hole in self.north_holes.iter() {
             acc += hole;
@@ -70,7 +70,7 @@ impl Board {
         acc += self.north_pot + self.south_pot;
         acc
     }
-    fn move_to_pot(&mut self, s: Side, hole: i32, pot_owner: Side) -> bool {
+    pub fn move_to_pot(&mut self, s: Side, hole: i32, pot_owner: Side) -> bool {
         if hole <= 0 || hole > self.num_holes {
             return false;
         }
@@ -97,7 +97,7 @@ impl Board {
 
         true
     }
-    fn set_beans(&mut self, s: Side, hole: i32, beans: i32) -> bool {
+    pub fn set_beans(&mut self, s: Side, hole: i32, beans: i32) -> bool {
         if hole < 0 || hole > self.num_holes {
             return false;
         }
@@ -127,7 +127,7 @@ impl Board {
         true
     }
 
-    fn sow(&mut self, side: Side, hole: i32, end_side: &mut Side, end_hole: &mut i32) -> bool {
+    pub fn sow(&mut self, side: Side, hole: i32, end_side: &mut Side, end_hole: &mut i32) -> bool {
         if hole <= 0 || hole > self.num_holes {
             return false;
         }
@@ -152,7 +152,7 @@ impl Board {
         true
     }
 
-    fn get_next_location(
+    pub fn get_next_location(
         side: Side,
         hole: i32,
         player_sowing: Side,
