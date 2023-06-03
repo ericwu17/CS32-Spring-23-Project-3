@@ -5,13 +5,14 @@ pub struct BadPlayer {
     name: String,
 }
 
-impl Player for BadPlayer {
-    fn new_from_name(name: &str) -> Self {
+impl BadPlayer {
+    pub fn new_from_name(name: &str) -> Self {
         BadPlayer {
             name: name.to_owned(),
         }
     }
-
+}
+impl Player for BadPlayer {
     fn get_name(&self) -> String {
         self.name.clone()
     }

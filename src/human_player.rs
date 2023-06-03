@@ -7,13 +7,15 @@ pub struct HumanPlayer {
     name: String,
 }
 
-impl Player for HumanPlayer {
-    fn new_from_name(name: &str) -> Self {
+impl HumanPlayer {
+    pub fn new_from_name(name: &str) -> Self {
         HumanPlayer {
             name: name.to_owned(),
         }
     }
+}
 
+impl Player for HumanPlayer {
     fn get_name(&self) -> String {
         self.name.clone()
     }
@@ -22,7 +24,20 @@ impl Player for HumanPlayer {
         true
     }
 
-    fn choose_move(&self, b: &Board, _: Side) -> i32 {
+    fn choose_move(&self, b: &Board, s: Side) -> i32 {
+        // first check for a legal move, and if none is available, then return -1
+
+        let mut has_legal_move = false;
+        for hole in 1..=b.holes() {
+            if b.beans(s, hole) > 0 {
+                has_legal_move = true;
+                break;
+            }
+        }
+        if !has_legal_move {
+            return -1;
+        }
+
         loop {
             println!("Select a hole, {}: ", self.name);
 
