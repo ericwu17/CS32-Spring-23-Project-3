@@ -137,9 +137,26 @@ impl Game {
 
             self.board.sow(s, move_chosen, &mut end_side, &mut end_hole);
 
-            if false {
-                // TODO: if further move is needed:
+            // execute a capture if the move ends in a player's own empty hole, and the opponent's hole
+            // opposite the ending hole is nonempty:
+            if end_hole != 0 && end_side == s {
+                if self.board.beans(s, end_hole) == 1 {
+                    // if the hole used to be empty
+                    if self.board.beans(s.opponent(), end_hole) != 0 {
+                        // if the opponent's corresponding hole is nonempty, execute capture
+                        self.board.move_to_pot(s, end_hole, s);
+                        self.board.move_to_pot(s.opponent(), end_hole, s);
+                    }
+                }
+            }
+
+            if end_hole == 0 {
+                // if further move is needed because move ends at pot:
+                self.display();
+                println!("{} gets another turn", self.get_player(s).get_name());
+                continue;
             } else {
+                // no further move needed:
                 break;
             }
         }
