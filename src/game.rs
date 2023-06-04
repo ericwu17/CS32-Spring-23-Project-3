@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use crate::board::{Board, Side};
 use crate::player::Player;
 
@@ -41,7 +43,7 @@ impl Game {
             print!("{}", self.board.beans(Side::North, hole));
             print!(" ");
         }
-        print!("\n");
+        println!();
 
         // print both players' pots
         print!(" ");
@@ -49,7 +51,7 @@ impl Game {
         for _ in 1..=self.board.holes() {
             print!("  ")
         }
-        print!("{} \n", self.board.beans(Side::South, 0));
+        println!("{} ", self.board.beans(Side::South, 0));
 
         // print south holes
         print!("   ");
@@ -57,7 +59,7 @@ impl Game {
             print!("{}", self.board.beans(Side::South, hole));
             print!(" ");
         }
-        print!("\n");
+        println!();
 
         // print south name
         let shift_amt = (total_line_length - self.south.get_name().len() as i32) / 2;
@@ -74,10 +76,10 @@ impl Game {
         }
     }
 
-    fn get_player(&self, s: Side) -> &Box<dyn Player> {
+    fn get_player(&self, s: Side) -> &dyn Player {
         match s {
-            Side::North => &self.north,
-            Side::South => &self.south,
+            Side::North => self.north.as_ref(),
+            Side::South => self.south.as_ref(),
         }
     }
 
@@ -119,13 +121,13 @@ impl Game {
                 let north_pot_beans = self.board.beans(Side::North, 0);
                 let south_pot_beans = self.board.beans(Side::South, 0);
 
-                self.winner = if north_pot_beans > south_pot_beans {
-                    Some(Side::North)
-                } else if north_pot_beans < south_pot_beans {
-                    Some(Side::South)
-                } else {
-                    None
+                self.winner = match north_pot_beans.cmp(&south_pot_beans) {
+                    Ordering::Equal => None,
+                    Ordering::Greater => Some(Side::North),
+                    Ordering::Less => Some(Side::South),
                 };
+
+                self.display();
 
                 return false;
             }
@@ -171,6 +173,6 @@ impl Game {
     }
 
     fn beans(&self, s: Side, hole: i32) -> i32 {
-        return self.board.beans(s, hole);
+        self.board.beans(s, hole)
     }
 }
