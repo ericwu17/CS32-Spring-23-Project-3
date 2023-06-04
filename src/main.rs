@@ -13,7 +13,7 @@ mod smart_player;
 
 fn main() {
     let player1 = SmartPlayer::new_from_name("Homer");
-    let player2 = SmartPlayer::new_from_name("Marge");
+    let player2 = HumanPlayer::new_from_name("Eric");
 
     let board = Board::new(6, 4);
 
