@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::cmp::Ordering;
 
 use crate::board::{Board, Side};
@@ -139,6 +141,7 @@ impl Game {
 
             // execute a capture if the move ends in a player's own empty hole, and the opponent's hole
             // opposite the ending hole is nonempty:
+            #[allow(clippy::collapsible_if)]
             if end_hole != 0 && end_side == s {
                 if self.board.beans(s, end_hole) == 1 {
                     // if the hole used to be empty

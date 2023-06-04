@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
 pub enum Side {
     North,
@@ -13,6 +15,7 @@ impl Side {
     }
 }
 
+#[derive(Clone)]
 pub struct Board {
     north_holes: Vec<i32>,
     south_holes: Vec<i32>,
