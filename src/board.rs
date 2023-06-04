@@ -4,6 +4,15 @@ pub enum Side {
     South,
 }
 
+impl Side {
+    pub fn opponent(&self) -> Side {
+        match self {
+            Side::North => Side::South,
+            Side::South => Side::North,
+        }
+    }
+}
+
 pub struct Board {
     north_holes: Vec<i32>,
     south_holes: Vec<i32>,

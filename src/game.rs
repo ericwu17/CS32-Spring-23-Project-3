@@ -74,6 +74,13 @@ impl Game {
         }
     }
 
+    fn get_player(&self, s: Side) -> &Box<dyn Player> {
+        match s {
+            Side::North => &self.north,
+            Side::South => &self.south,
+        }
+    }
+
     fn make_move(&mut self, s: Side) -> bool {
         // Attempt to make a complete move for the player playing side s.
         // "Complete" means that the player sows the seeds from a hole and takes any additional
@@ -83,9 +90,84 @@ impl Game {
         // yet completed but side s has no holes with beans to pick up and sow, sweep any beans
         // in s's opponent's holes into that opponent's pot and return false.
 
-        // TODO:
+        let player = match s {
+            Side::North => &self.north,
+            Side::South => &self.south,
+        };
+
+        loop {
+            let move_chosen = player.choose_move(&self.board, s);
+
+            if move_chosen == -1 {
+                // indicates no move is possible, and so sweep beans into s's opponent's holes and return false.
+
+                println!(
+                    "{} has no beans left to sow.",
+                    self.get_player(s).get_name()
+                );
+                println!(
+                    "Sweeping remaining beans into {}'s pot.",
+                    self.get_player(s.opponent()).get_name()
+                );
+
+                for hole in 1..=self.board.holes() {
+                    self.board.move_to_pot(s.opponent(), hole, s.opponent());
+                }
+
+                self.is_over = true;
+
+                let north_pot_beans = self.board.beans(Side::North, 0);
+                let south_pot_beans = self.board.beans(Side::South, 0);
+
+                self.winner = if north_pot_beans > south_pot_beans {
+                    Some(Side::North)
+                } else if north_pot_beans < south_pot_beans {
+                    Some(Side::South)
+                } else {
+                    None
+                };
+
+                return false;
+            }
+
+            let mut end_side: Side = Side::North;
+            let mut end_hole: i32 = 0;
+
+            self.board.sow(s, move_chosen, &mut end_side, &mut end_hole);
+
+            if false {
+                // TODO: if further move is needed:
+            } else {
+                break;
+            }
+        }
 
         true
+    }
+
+    pub fn play(&mut self) {
+        let mut side_to_move = Side::South;
+        loop {
+            self.display();
+            let res = self.make_move(side_to_move);
+            if !res {
+                break;
+            }
+
+            side_to_move = side_to_move.opponent();
+        }
+
+        match self.winner {
+            Some(Side::North) => {
+                println!("The winner is {}.", self.north.get_name())
+            }
+            Some(Side::South) => {
+                println!("The winner is {}.", self.south.get_name())
+            }
+            None => {
+                println!("The game is a tie.")
+            }
+        }
     }
 
     fn beans(&self, s: Side, hole: i32) -> i32 {

@@ -11,11 +11,11 @@ mod player;
 
 fn main() {
     let player1 = BadPlayer::new_from_name("Homer");
-    let player2 = HumanPlayer::new_from_name("Eric");
+    let player2 = HumanPlayer::new_from_name("Marge");
 
     let board = Board::new(3, 2);
 
-    let game = Game::new(board, Box::new(player2), Box::new(player1));
+    let mut game = Game::new(board, Box::new(player2), Box::new(player1));
 
-    game.display();
+    game.play();
 }

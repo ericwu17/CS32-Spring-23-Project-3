@@ -26,6 +26,7 @@ impl Player for BadPlayer {
 
         for hole in 1..=b.holes() {
             if b.beans(s, hole) > 0 {
+                println!("{} chooses hole {}", self.name, hole);
                 return hole;
             }
         }

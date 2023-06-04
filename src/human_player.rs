@@ -1,7 +1,7 @@
 use crate::board::Board;
 use crate::board::Side;
 use crate::player::Player;
-use std::io;
+use std::io::{self, Write};
 
 pub struct HumanPlayer {
     name: String,
@@ -39,7 +39,8 @@ impl Player for HumanPlayer {
         }
 
         loop {
-            println!("Select a hole, {}: ", self.name);
+            print!("Select a hole, {}: ", self.name);
+            io::stdout().flush().expect("failed to flush stdout!");
 
             let mut input_text = String::new();
             io::stdin()
@@ -54,7 +55,12 @@ impl Player for HumanPlayer {
                         println!("The hole number must be from 1 to {}.", b.holes());
                         continue;
                     } else {
-                        return i;
+                        // check that there are beans in the hole:
+                        if b.beans(s, i) > 0 {
+                            return i;
+                        } else {
+                            println!("There are no beans in that hole.")
+                        }
                     }
                 }
                 Err(..) => {
